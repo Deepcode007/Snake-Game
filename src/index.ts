@@ -73,7 +73,7 @@ const draw = () => {
   else
   {
     // remove tail
-    ctx.clearRect(snake[snake.length -1].x, snake[snake.length -1].y, grid_size, grid_size);
+    ctx.clearRect(snake[snake.length -1]!.x, snake[snake.length -1]!.y, grid_size, grid_size);
     snake.pop();
   }
   

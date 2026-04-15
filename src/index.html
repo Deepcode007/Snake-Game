@@ -2,7 +2,32 @@
     <head>
         <title>Snake Game</title>
         <link rel="stylesheet" href="index.css">
-        <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+        <script>
+            // Load Vercel Insights only after user consent
+            function loadVercelInsights() {
+                const script = document.createElement('script');
+                script.defer = true;
+                script.src = 'https://cdn.vercel-insights.com/v1/script.js';
+                document.head.appendChild(script);
+            }
+
+            // Check for user consent and load analytics if granted
+            function checkConsentAndLoadAnalytics() {
+                // Check localStorage for consent (you can also check cookies if preferred)
+                const hasConsent = localStorage.getItem('analyticsConsent') === 'true';
+
+                if (hasConsent) {
+                    loadVercelInsights();
+                }
+            }
+
+            // Run consent check when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', checkConsentAndLoadAnalytics);
+            } else {
+                checkConsentAndLoadAnalytics();
+            }
+        </script>
     </head>
     <body>
         <div class="navbar">
