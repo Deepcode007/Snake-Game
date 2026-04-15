@@ -1,0 +1,94 @@
+body{
+    background-color: seagreen;
+}
+
+.navbar{
+    background-color: mediumseagreen;
+    height: 2cm;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    
+    border-radius: 10vh;
+    /*padding: 2px;*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10 0 10;
+}
+.left_navbar
+{
+    width: 30%;
+    /*min-width: 100px;*/
+    display: flex;
+    justify-content: space-between;
+    
+    
+}
+
+.logo_text
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.5cm;
+    width: max-content;
+    border-radius: 10vh;
+    background-color: black;
+    padding: 0 10 0 10;
+    font-size: 20;
+    color: darkgreen;
+}
+.left_btn
+{
+    display: flex;
+    width: 70%;
+    justify-content: space-evenly;
+}
+
+.home_btn
+{
+    /*height: 1.5cm;*/
+    border-radius: 10px;
+    padding: 0 20 0 20;
+    border: none;
+    background-color: darkgreen;
+    
+    color: #3dbd00;
+    font-size: 20;
+}
+
+.right_navbar
+{
+    /*background-color: black;*/
+    width: 12%;
+    height: 100%;
+    border-radius: 10vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.Profile
+{
+    padding: 0 15 0 15;
+    height: 1.5cm;
+    font-size: 20;
+    border-radius: 15px;
+    border: none;
+}
+
+
+.grid_outer
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 91%;
+    width: 100%;
+}
+
+.grid_inner
+{
+    background-color: white;
+    height: 500px;
+    width: 500px;
+}
