@@ -1,3 +1,8 @@
+import { inject } from '@vercel/analytics';
+
+// Initialize Vercel Web Analytics
+inject();
+
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 
 const grid_size = 25; // 500/25 = 20 x 20 grid_size
