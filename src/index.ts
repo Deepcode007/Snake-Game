@@ -18,8 +18,8 @@ let del = "DOWN";
 
 
 let food = {
-  x: 0,
-  y: 0
+  x: 1,
+  y: 1
 };
 
 // generate between 0.000 to 19.999 and then floor;
@@ -28,10 +28,20 @@ const food_where = () => {
   food.y = Math.floor(Math.random() * 20) * grid_size;
 };
 
+const draw_food = () => {
+  ctx.fillStyle = "red";
+  ctx.fillRect(food.x, food.y, grid_size, grid_size);
+}
+
+// spawn food
 food_where();
+draw_food();
 
 const draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // redraw the food
+  draw_food();
+  
   if (del == "UP")
   {
     snake[0]!.y -= grid_size;
@@ -52,8 +62,12 @@ const draw = () => {
   
   ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
 
-  ctx.fillStyle = "red";
-  ctx.fillRect(food.x, food.y, grid_size, grid_size);
+  
+  if (food.x == snake[0]!.x && food.y == snake[0]!.y)
+  {
+    food_where();
+    draw_food();
+  }
 
 }
 

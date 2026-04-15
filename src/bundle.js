@@ -7,16 +7,22 @@ ctx.fillStyle = "darkgreen";
 ctx.fillRect(snake[0].x, snake[0].y, grid_size, grid_size);
 var del = "DOWN";
 var food = {
-  x: 0,
-  y: 0
+  x: 1,
+  y: 1
 };
 var food_where = () => {
   food.x = Math.floor(Math.random() * 20) * grid_size;
   food.y = Math.floor(Math.random() * 20) * grid_size;
 };
+var draw_food = () => {
+  ctx.fillStyle = "red";
+  ctx.fillRect(food.x, food.y, grid_size, grid_size);
+};
 food_where();
+draw_food();
 var draw = () => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  draw_food();
   if (del == "UP") {
     snake[0].y -= grid_size;
   } else if (del == "DOWN") {
@@ -28,8 +34,10 @@ var draw = () => {
   }
   ctx.fillStyle = "darkgreen";
   ctx.fillRect(snake[0].x, snake[0].y, grid_size, grid_size);
-  ctx.fillStyle = "red";
-  ctx.fillRect(food.x, food.y, grid_size, grid_size);
+  if (food.x == snake[0].x && food.y == snake[0].y) {
+    food_where();
+    draw_food();
+  }
 };
 setInterval(draw, 1000);
 document.addEventListener("keydown", (key) => {
