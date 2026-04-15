@@ -2,34 +2,20 @@
     <head>
         <title>Snake Game</title>
         <link rel="stylesheet" href="index.css">
-        <script>
-            // Load Vercel Insights only after user consent
-            function loadVercelInsights() {
-                const script = document.createElement('script');
-                script.defer = true;
-                script.src = 'https://cdn.vercel-insights.com/v1/script.js';
-                document.head.appendChild(script);
-            }
-
-            // Check for user consent and load analytics if granted
-            function checkConsentAndLoadAnalytics() {
-                // Check localStorage for consent (you can also check cookies if preferred)
-                const hasConsent = localStorage.getItem('analyticsConsent') === 'true';
-
-                if (hasConsent) {
-                    loadVercelInsights();
-                }
-            }
-
-            // Run consent check when DOM is ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', checkConsentAndLoadAnalytics);
-            } else {
-                checkConsentAndLoadAnalytics();
-            }
-        </script>
+        <link rel="stylesheet" href="analytics-consent.css">
     </head>
     <body>
+        <div id="analytics-consent-banner" role="region" aria-label="Analytics consent">
+            <p>
+                We use <strong>Vercel Web Analytics</strong> to collect anonymous usage data to help improve this game.
+                No personal information is collected. Do you consent to analytics tracking?
+            </p>
+            <div class="consent-buttons">
+                <button id="analytics-accept-btn">Accept</button>
+                <button id="analytics-decline-btn">Decline</button>
+            </div>
+        </div>
+
         <div class="navbar">
             <div class="left_navbar">
                 <span class="logo_text">Lets Snake!!</span>
@@ -41,15 +27,16 @@
             </div>
             <div class="right_navbar">
                 <button class="Profile">Stats</button>
-                
+
                 <button class="Profile">Profile</button>
-            </div>     
+            </div>
         </div>
-        
+
         <div class="grid_outer">
             <canvas id="gameCanvas" class="grid_inner" width="500" height="500"></canvas>
         </div>
-        
+
         <script src="bundle.js"></script>
+        <script src="analytics-consent.js"></script>
     </body>
 </html>
