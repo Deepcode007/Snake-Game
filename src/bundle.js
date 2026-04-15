@@ -21,22 +21,28 @@ var draw_food = () => {
 food_where();
 draw_food();
 var draw = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   draw_food();
-  if (del == "UP") {
-    snake[0].y -= grid_size;
-  } else if (del == "DOWN") {
-    snake[0].y += grid_size;
-  } else if (del == "RIGHT") {
-    snake[0].x += grid_size;
-  } else if (del == "LEFT") {
-    snake[0].x -= grid_size;
-  }
+  let newHead = {
+    x: snake[0].x,
+    y: snake[0].y
+  };
+  if (del == "UP")
+    newHead.y -= grid_size;
+  else if (del == "DOWN")
+    newHead.y += grid_size;
+  else if (del == "RIGHT")
+    newHead.x += grid_size;
+  else if (del == "LEFT")
+    newHead.x -= grid_size;
+  snake.unshift(newHead);
   ctx.fillStyle = "darkgreen";
   ctx.fillRect(snake[0].x, snake[0].y, grid_size, grid_size);
   if (food.x == snake[0].x && food.y == snake[0].y) {
     food_where();
     draw_food();
+  } else {
+    ctx.clearRect(snake[snake.length - 1].x, snake[snake.length - 1].y, grid_size, grid_size);
+    snake.pop();
   }
 };
 setInterval(draw, 1000);

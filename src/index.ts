@@ -38,36 +38,45 @@ food_where();
 draw_food();
 
 const draw = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   // redraw the food
   draw_food();
   
+  let newHead: SnakeSegment = {
+    x: snake[0]!.x,
+    y: snake[0]!.y
+  };
+  
+
+  
   if (del == "UP")
-  {
-    snake[0]!.y -= grid_size;
-  }
+    newHead.y -= grid_size;
   else if (del == "DOWN")
-  {
-    snake[0]!.y += grid_size;
-  }
+    newHead.y += grid_size;
   else if (del == "RIGHT")
-  {
-    snake[0]!.x += grid_size;
-  }
+    newHead.x += grid_size;
   else if (del == "LEFT")
-  {
-    snake[0]!.x -= grid_size;
-  }
+    newHead.x -= grid_size;
+  
+  
+
+  snake.unshift(newHead);
   ctx.fillStyle = "darkgreen";
   
   ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
+  
 
   
-  if (food.x == snake[0]!.x && food.y == snake[0]!.y)
-  {
+  if (food.x == snake[0]!.x && food.y == snake[0]!.y) {
     food_where();
     draw_food();
   }
+  else
+  {
+    // remove tail
+    ctx.clearRect(snake[snake.length -1].x, snake[snake.length -1].y, grid_size, grid_size);
+    snake.pop();
+  }
+  
 
 }
 
