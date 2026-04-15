@@ -27,7 +27,6 @@
 
     function showBanner() {
         banner.style.display = 'flex';
-        acceptBtn.focus();
     }
 
     var consent = localStorage.getItem(STORAGE_KEY);
