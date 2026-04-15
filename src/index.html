@@ -2,34 +2,73 @@
     <head>
         <title>Snake Game</title>
         <link rel="stylesheet" href="index.css">
-        <script>
-            // Load Vercel Insights only after user consent
-            function loadVercelInsights() {
-                const script = document.createElement('script');
-                script.defer = true;
-                script.src = 'https://cdn.vercel-insights.com/v1/script.js';
-                document.head.appendChild(script);
+        <style>
+            #analytics-consent-banner {
+                display: none;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: #1a4a1a;
+                color: #3dbd00;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                padding: 16px 24px;
+                box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.4);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                flex-wrap: wrap;
             }
-
-            // Check for user consent and load analytics if granted
-            function checkConsentAndLoadAnalytics() {
-                // Check localStorage for consent (you can also check cookies if preferred)
-                const hasConsent = localStorage.getItem('analyticsConsent') === 'true';
-
-                if (hasConsent) {
-                    loadVercelInsights();
-                }
+            #analytics-consent-banner p {
+                margin: 0;
+                flex: 1;
+                font-size: 15px;
+                line-height: 1.4;
             }
-
-            // Run consent check when DOM is ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', checkConsentAndLoadAnalytics);
-            } else {
-                checkConsentAndLoadAnalytics();
+            #analytics-consent-banner .consent-buttons {
+                display: flex;
+                gap: 10px;
+                flex-shrink: 0;
             }
-        </script>
+            #analytics-consent-banner button {
+                padding: 8px 20px;
+                border: none;
+                border-radius: 10px;
+                font-family: inherit;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            #analytics-accept-btn {
+                background-color: darkgreen;
+                color: #3dbd00;
+            }
+            #analytics-accept-btn:hover {
+                background-color: #145214;
+            }
+            #analytics-decline-btn {
+                background-color: #333;
+                color: #aaa;
+            }
+            #analytics-decline-btn:hover {
+                background-color: #444;
+            }
+        </style>
     </head>
     <body>
+        <div id="analytics-consent-banner">
+            <p>
+                We use <strong>Vercel Web Analytics</strong> to collect anonymous usage data to help improve this game.
+                No personal information is collected. Do you consent to analytics tracking?
+            </p>
+            <div class="consent-buttons">
+                <button id="analytics-accept-btn">Accept</button>
+                <button id="analytics-decline-btn">Decline</button>
+            </div>
+        </div>
+
         <div class="navbar">
             <div class="left_navbar">
                 <span class="logo_text">Lets Snake!!</span>
@@ -41,15 +80,55 @@
             </div>
             <div class="right_navbar">
                 <button class="Profile">Stats</button>
-                
+
                 <button class="Profile">Profile</button>
-            </div>     
+            </div>
         </div>
-        
+
         <div class="grid_outer">
             <canvas id="gameCanvas" class="grid_inner" width="500" height="500"></canvas>
         </div>
-        
+
         <script src="bundle.js"></script>
+        <script>
+            (function () {
+                var STORAGE_KEY = 'vercel_analytics_consent';
+                var banner = document.getElementById('analytics-consent-banner');
+                var acceptBtn = document.getElementById('analytics-accept-btn');
+                var declineBtn = document.getElementById('analytics-decline-btn');
+
+                function loadAnalytics() {
+                    var script = document.createElement('script');
+                    script.defer = true;
+                    script.src = 'https://cdn.vercel-insights.com/v1/script.js';
+                    document.head.appendChild(script);
+                }
+
+                function hideBanner() {
+                    banner.style.display = 'none';
+                }
+
+                var consent = localStorage.getItem(STORAGE_KEY);
+
+                if (consent === 'accepted') {
+                    loadAnalytics();
+                } else if (consent === 'declined') {
+                    // do nothing
+                } else {
+                    banner.style.display = 'flex';
+                }
+
+                acceptBtn.addEventListener('click', function () {
+                    localStorage.setItem(STORAGE_KEY, 'accepted');
+                    loadAnalytics();
+                    hideBanner();
+                });
+
+                declineBtn.addEventListener('click', function () {
+                    localStorage.setItem(STORAGE_KEY, 'declined');
+                    hideBanner();
+                });
+            })();
+        </script>
     </body>
 </html>
