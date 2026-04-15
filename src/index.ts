@@ -14,13 +14,37 @@ const ctx = canvas.getContext("2d") as  CanvasRenderingContext2D; // paint brush
 ctx.fillStyle = "darkgreen"; // colour of paint brush
 
 ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
-let del = 1;
+let del = "DOWN";
 const draw = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (del == "UP")
+  {
+    snake[0].y -= grid_size;
+  }
+  else if (del == "DOWN")
+  {
+    snake[0].y += grid_size;
+  }
+  else if (del == "RIGHT")
+  {
+    snake[0].x += grid_size;
+  }
+  else if (del == "LEFT")
+  {
+    snake[0].x -= grid_size;
+  }
+  ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
 
-  ctx.fillRect(snake[0]!.x + del, snake[0]!.y + del, grid_size + del, grid_size + del);
-  del++;
 
 }
 
 setInterval(draw, 1000);
+
+document.addEventListener("keydown", (key) => {
+  if (key.key =="ArrowDown") {
+    del = "DOWN";
+  }
+  else if (key.key == "ArrowUp") del = "UP";
+  else if (key.key == "ArrowRight") del = "RIGHT";
+  else if (key.key == "ArrowLeft") del = "LEFT";
+})
