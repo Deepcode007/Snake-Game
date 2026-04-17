@@ -15,7 +15,15 @@ ctx.fillStyle = "darkgreen"; // colour of paint brush
 
 ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
 let del = "DOWN";
+let temp = del;
 
+
+const check_valid_direction = () => {
+  if ( del === "UP" && temp !== "DOWN") del = temp;
+  else if (del === "DOWN" && temp !== "UP") del=temp;
+  else if (del === "LEFT" && temp !== "RIGHT") del = temp;
+  else if (del === "RIGHT" && temp !== "LEFT") del = temp;
+}
 
 let food = {
   x: 1,
@@ -38,6 +46,8 @@ food_where();
 draw_food();
 
 const draw = () => {
+  // change to last changed logic
+  check_valid_direction();
   // redraw the food
   draw_food();
   
@@ -99,9 +109,9 @@ setInterval(draw, 1000);
 
 document.addEventListener("keydown", (key) => {
   if (key.key =="ArrowDown" && del != "UP") {
-    del = "DOWN";
+    temp = "DOWN";
   }
-  else if (key.key == "ArrowUp" && del != "DOWN") del = "UP";
-  else if (key.key == "ArrowRight" && del != "LEFT") del = "RIGHT";
-  else if (key.key == "ArrowLeft" && del != "RIGHT") del = "LEFT";
+  else if (key.key == "ArrowUp" && del != "DOWN") temp = "UP";
+  else if (key.key == "ArrowRight" && del != "LEFT") temp = "RIGHT";
+  else if (key.key == "ArrowLeft" && del != "RIGHT") temp = "LEFT";
 })

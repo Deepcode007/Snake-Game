@@ -6,6 +6,17 @@ var ctx = canvas.getContext("2d");
 ctx.fillStyle = "darkgreen";
 ctx.fillRect(snake[0].x, snake[0].y, grid_size, grid_size);
 var del = "DOWN";
+var temp = del;
+var check_valid_direction = () => {
+  if (del === "UP" && temp !== "DOWN")
+    del = temp;
+  else if (del === "DOWN" && temp !== "UP")
+    del = temp;
+  else if (del === "LEFT" && temp !== "RIGHT")
+    del = temp;
+  else if (del === "RIGHT" && temp !== "LEFT")
+    del = temp;
+};
 var food = {
   x: 1,
   y: 1
@@ -21,6 +32,7 @@ var draw_food = () => {
 food_where();
 draw_food();
 var draw = () => {
+  check_valid_direction();
   draw_food();
   let newHead = {
     x: snake[0].x,
@@ -56,11 +68,11 @@ var draw = () => {
 setInterval(draw, 1000);
 document.addEventListener("keydown", (key) => {
   if (key.key == "ArrowDown" && del != "UP") {
-    del = "DOWN";
+    temp = "DOWN";
   } else if (key.key == "ArrowUp" && del != "DOWN")
-    del = "UP";
+    temp = "UP";
   else if (key.key == "ArrowRight" && del != "LEFT")
-    del = "RIGHT";
+    temp = "RIGHT";
   else if (key.key == "ArrowLeft" && del != "RIGHT")
-    del = "LEFT";
+    temp = "LEFT";
 });
