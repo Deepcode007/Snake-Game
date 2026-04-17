@@ -47,12 +47,12 @@ var draw = () => {
 };
 setInterval(draw, 1000);
 document.addEventListener("keydown", (key) => {
-  if (key.key == "ArrowDown") {
+  if (key.key == "ArrowDown" && del != "UP") {
     del = "DOWN";
-  } else if (key.key == "ArrowUp")
+  } else if (key.key == "ArrowUp" && del != "DOWN")
     del = "UP";
-  else if (key.key == "ArrowRight")
+  else if (key.key == "ArrowRight" && del != "LEFT")
     del = "RIGHT";
-  else if (key.key == "ArrowLeft")
+  else if (key.key == "ArrowLeft" && del != "RIGHT")
     del = "LEFT";
 });
