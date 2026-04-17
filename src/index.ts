@@ -62,6 +62,21 @@ const draw = () => {
   snake.unshift(newHead);
   ctx.fillStyle = "darkgreen";
   
+  // boundary logic x
+  if (snake[0]!.x >= 500)
+  {
+    snake[0]!.x = 0;
+  }
+  else if (snake[0]!.x < 0) snake[0]!.x = 500 - grid_size;
+  
+  
+  // boundary logic y
+  if (snake[0]!.y >= 500)
+  {
+    snake[0]!.y = 0;
+  }
+  else if (snake[0]!.y < 0) snake[0]!.y = 500 - grid_size;
+  
   ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
   
 

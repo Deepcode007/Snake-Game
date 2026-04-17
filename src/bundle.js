@@ -36,6 +36,14 @@ var draw = () => {
     newHead.x -= grid_size;
   snake.unshift(newHead);
   ctx.fillStyle = "darkgreen";
+  if (snake[0].x >= 500) {
+    snake[0].x = 0;
+  } else if (snake[0].x < 0)
+    snake[0].x = 500 - grid_size;
+  if (snake[0].y >= 500) {
+    snake[0].y = 0;
+  } else if (snake[0].y < 0)
+    snake[0].y = 500 - grid_size;
   ctx.fillRect(snake[0].x, snake[0].y, grid_size, grid_size);
   if (food.x == snake[0].x && food.y == snake[0].y) {
     food_where();
