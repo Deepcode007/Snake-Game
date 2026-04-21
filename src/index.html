@@ -1,42 +1,11 @@
-<html>
-    <head>
-        <title>Snake Game</title>
-        <link rel="stylesheet" href="index.css">
-        <link rel="stylesheet" href="analytics-consent.css">
-    </head>
-    <body>
-        <div id="analytics-consent-banner" role="region" aria-label="Analytics consent">
-            <p>
-                We use <strong>Vercel Web Analytics</strong> to collect anonymous usage data to help improve this game.
-                No personal information is collected. Do you consent to analytics tracking?
-            </p>
-            <div class="consent-buttons">
-                <button type="button" id="analytics-accept-btn">Accept</button>
-                <button type="button" id="analytics-decline-btn">Decline</button>
-            </div>
-        </div>
-
-        <div class="navbar">
-            <div class="left_navbar">
-                <span class="logo_text">Lets Snake!!</span>
-                <div class="left_btn">
-                    <button class="home_btn">Home</button>
-                    <button class="home_btn">Rules</button>
-                    <button class="home_btn">About us</button>
-                </div>
-            </div>
-            <div class="right_navbar">
-                <button class="Profile">Stats</button>
-
-                <button class="Profile">Profile</button>
-            </div>
-        </div>
-
-        <div class="grid_outer">
-            <canvas id="gameCanvas" class="grid_inner" width="500" height="500"></canvas>
-        </div>
-
-        <script src="bundle.js"></script>
-        <script src="analytics-consent.js"></script>
-    </body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="./index.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./frontend.tsx"></script>
+  </body>
 </html>
