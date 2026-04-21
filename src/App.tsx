@@ -3,9 +3,14 @@ import { Navbar } from "./components/navbar";
 import "./index.css";
 import { Canvas } from "./components/canvas";
 
+
 export interface SnakeSegment {
     x: number,
     y: number
+}
+
+enum Directions{
+    "UP", "DOWN", "LEFT", "RIGHT"
 }
 
 export interface GlobalContextType {
@@ -13,6 +18,8 @@ export interface GlobalContextType {
     setSnake: React.Dispatch<React.SetStateAction<SnakeSegment[]>>;
     food: { x: number; y: number };
     setFood: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
+    del: String;
+    setDel: React.Dispatch<React.SetStateAction<String>>;
 }
 
 export const grid_size = 25;
@@ -22,9 +29,11 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         { x: 0, y: 0 },
     ]);
     const [food, setFood] = useState({ x: 1, y: 1 });
+    
+    const [del, setDel] = useState<String>("UP");
 
     return (
-        <GlobalContext.Provider value={{ snake, setSnake, food, setFood }}>
+        <GlobalContext.Provider value={{ snake, setSnake, food, setFood, del, setDel }}>
             {children}
         </GlobalContext.Provider>
     );

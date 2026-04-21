@@ -1,21 +1,26 @@
 import { GlobalContext, grid_size, type GlobalContextType } from "@/App";
-import { draw } from "@/functions/game";
+import { draw, keypress, initGame, syncContext } from "@/functions/game";
 import { useContext, useEffect, useRef } from "react";
 
 export function Canvas() {
-    const { snake, setSnake } = useContext(GlobalContext) as GlobalContextType;
+    const globalContext = useContext(GlobalContext) as GlobalContextType;
+    const { setSnake } = globalContext;
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const initialized = useRef(false);
+
+    // Sync context to game loop on every render so it has latest dispatchers/state
+    syncContext(globalContext);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
         if (!ctx) return;
 
         // Define logical dimensions
-        const width = 600;
-        const height = 600;
+        const width = Number(process.env.BUN_PUBLIC_CANVAS_WIDTH);
+        const height = Number(process.env.BUN_PUBLIC_CANVAS_HEIGHT);
 
         // Handle High DPI displays (Retina screens)
         const dpr = window.devicePixelRatio || 1;
@@ -25,27 +30,32 @@ export function Canvas() {
         // Scale context so we can use logical coordinates (0-500)
         ctx.scale(dpr, dpr);
 
-        // Calculate center position aligned to the grid
-        const centerX = Math.floor(width / 2 / grid_size) * grid_size;
-        const centerY = Math.floor(height / 2 / grid_size) * grid_size;
+        if (!initialized.current) {
+            const centerX = Math.floor(width / 2 / grid_size) * grid_size;
+            const centerY = Math.floor(height / 2 / grid_size) * grid_size;
 
-        // Update global state
-        setSnake([{ x: centerX, y: centerY }]);
+            // Initial clear and draw background
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, width, height);
 
-        // Initial draw
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = "green";
+            ctx.fillRect(centerX, centerY, grid_size, grid_size);
 
-        ctx.fillStyle = "green";
-        ctx.fillRect(centerX, centerY, grid_size, grid_size);
-        
-        const a = setInterval(draw, 500);
-        
-        return () => {
-            clearInterval(a);
+            setSnake([{ x: centerX, y: centerY }]);
+            initGame(ctx, globalContext);
+            initialized.current = true;
         }
-    }, [setSnake]);
 
+        const intervalId = setInterval(draw, 500);
+
+        const handleKeydown = (key: KeyboardEvent) => keypress(key);
+        document.addEventListener("keydown", handleKeydown);
+
+        return () => {
+            clearInterval(intervalId);
+            document.removeEventListener("keydown", handleKeydown);
+        };
+    }, []);
     return (
         <canvas
             ref={canvasRef}
