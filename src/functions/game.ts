@@ -197,5 +197,6 @@ export const draw = () => {
         food_where();
         draw_food();
         updateDir("UP");
+        temp = "UP";
     }
 };
