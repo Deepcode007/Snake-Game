@@ -1,4 +1,5 @@
-import { GlobalContext, grid_size, type GlobalContextType, type SnakeSegment } from "@/App";
+import { grid_size, type GlobalContextType, type SnakeSegment } from "@/App";
+import { flushSync } from "react-dom";
 
 let ctx: CanvasRenderingContext2D | null = null;
 let globalCtx: GlobalContextType | null = null;
@@ -14,7 +15,7 @@ export const initGame = (
 ) => {
     ctx = canvasCtx;
     globalCtx = context;
-    temp = context.del as string;
+    temp = context.dir as string;
     ctx.fillStyle = "darkgreen";
     food_where();
     draw_food();
@@ -24,22 +25,32 @@ export const syncContext = (context: GlobalContextType) => {
     globalCtx = context;
 };
 
+
+// use flushSync to force a synchronous update
+const updateDir = (temp:string) => {
+    flushSync(() => {
+        const { setDir } = globalCtx as GlobalContextType;
+      setDir(temp);
+    });
+
+}
+
 export const check_valid_direction = () => {
     if (!globalCtx) return;
-    const { del, setDel } = globalCtx;
-    if (del === "UP" && temp !== "DOWN") setDel(temp);
-    else if (del === "DOWN" && temp !== "UP") setDel(temp);
-    else if (del === "LEFT" && temp !== "RIGHT") setDel(temp);
-    else if (del === "RIGHT" && temp !== "LEFT") setDel(temp);
+    const { dir } = globalCtx;
+    if (dir === "UP" && temp !== "DOWN") updateDir(temp);
+    else if (dir === "DOWN" && temp !== "UP") updateDir(temp);
+    else if (dir === "LEFT" && temp !== "RIGHT") updateDir(temp);
+    else if (dir === "RIGHT" && temp !== "LEFT") updateDir(temp);
 };
 
 export const keypress = (key: KeyboardEvent) => {
     if (!globalCtx) return;
-    const { del } = globalCtx;
-    if (key.key === "ArrowDown" && del !== "UP") temp = "DOWN";
-    else if (key.key === "ArrowUp" && del !== "DOWN") temp = "UP";
-    else if (key.key === "ArrowRight" && del !== "LEFT") temp = "RIGHT";
-    else if (key.key === "ArrowLeft" && del !== "RIGHT") temp = "LEFT";
+    const { dir } = globalCtx;
+    if (key.key === "ArrowDown" && dir !== "UP") temp = "DOWN";
+    else if (key.key === "ArrowUp" && dir !== "DOWN") temp = "UP";
+    else if (key.key === "ArrowRight" && dir !== "LEFT") temp = "RIGHT";
+    else if (key.key === "ArrowLeft" && dir !== "RIGHT") temp = "LEFT";
 };
 
 // generate between 0.000 to 19.999 and then floor;
@@ -84,10 +95,11 @@ const check_if_overlap = () => {
 
 export const draw = () => {
     if (!ctx || !globalCtx) return;
-    const { snake, del, setSnake, setDel, food } = globalCtx;
+    check_valid_direction();
+    
+    const { snake, dir, setSnake, setDir, food } = globalCtx;
     if (!snake || snake.length === 0) return;
 
-    check_valid_direction();
     // redraw the food
     draw_food();
 
@@ -96,10 +108,10 @@ export const draw = () => {
         y: snake[0]!.y,
     };
 
-    if (del === "UP") newHead.y -= grid_size;
-    else if (del === "DOWN") newHead.y += grid_size;
-    else if (del === "RIGHT") newHead.x += grid_size;
-    else if (del === "LEFT") newHead.x -= grid_size;
+    if (dir === "UP") newHead.y -= grid_size;
+    else if (dir === "DOWN") newHead.y += grid_size;
+    else if (dir === "RIGHT") newHead.x += grid_size;
+    else if (dir === "LEFT") newHead.x -= grid_size;
 
     snake.unshift(newHead);
 
@@ -132,6 +144,6 @@ export const draw = () => {
         setSnake([{ x: centerX, y: centerY }]);
         ctx.clearRect(0, 0, height, width);
         food_where();
-        setDel("UP");
+        setDir("UP");
     }
 };

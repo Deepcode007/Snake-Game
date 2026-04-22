@@ -46,11 +46,10 @@ export function Canvas() {
             initialized.current = true;
         }
 
-        const intervalId = setInterval(draw, 500);
-
         const handleKeydown = (key: KeyboardEvent) => keypress(key);
         document.addEventListener("keydown", handleKeydown);
 
+        const intervalId = setInterval(draw, 500);
         return () => {
             clearInterval(intervalId);
             document.removeEventListener("keydown", handleKeydown);

@@ -18,8 +18,8 @@ export interface GlobalContextType {
     setSnake: React.Dispatch<React.SetStateAction<SnakeSegment[]>>;
     food: { x: number; y: number };
     setFood: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
-    del: String;
-    setDel: React.Dispatch<React.SetStateAction<String>>;
+    dir: String;
+    setDir: React.Dispatch<React.SetStateAction<String>>;
 }
 
 export const grid_size = 25;
@@ -30,10 +30,10 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     ]);
     const [food, setFood] = useState({ x: 1, y: 1 });
     
-    const [del, setDel] = useState<String>("UP");
+    const [dir, setDir] = useState<String>("UP");
 
     return (
-        <GlobalContext.Provider value={{ snake, setSnake, food, setFood, del, setDel }}>
+        <GlobalContext.Provider value={{ snake, setSnake, food, setFood, dir, setDir }}>
             {children}
         </GlobalContext.Provider>
     );
