@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+#game-container {
+  border: 2px solid #2A2A2A;
+  border-radius: 8px; /* Smooth corners on the game board */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden; /* Keeps the canvas nicely contained */
+}

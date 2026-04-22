@@ -44,7 +44,7 @@ export function App() {
         <GlobalProvider>
             <div className="bg-gray-400 h-screen flex flex-col">
                 <Navbar></Navbar>
-                <div className="flex justify-center items-center h-full w-full bg-amber-600">
+                <div className="flex justify-center items-center h-full w-full bg-amber-600" id="game-container">
                     <Canvas />
                 </div>
             </div>

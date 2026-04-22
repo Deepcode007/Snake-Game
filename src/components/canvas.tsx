@@ -1,5 +1,5 @@
 import { GlobalContext, grid_size, type GlobalContextType } from "@/App";
-import { draw, keypress, initGame, syncContext } from "@/functions/game";
+import { draw, keypress, initGame, syncContext, THEME } from "@/functions/game";
 import { useContext, useEffect, useRef } from "react";
 
 export function Canvas() {
@@ -35,10 +35,10 @@ export function Canvas() {
             const centerY = Math.floor(height / 2 / grid_size) * grid_size;
 
             // Initial clear and draw background
-            ctx.fillStyle = "white";
+            ctx.fillStyle = THEME.background;
             ctx.fillRect(0, 0, width, height);
 
-            ctx.fillStyle = "green";
+            ctx.fillStyle = THEME.snakeHead;
             ctx.fillRect(centerX, centerY, grid_size, grid_size);
 
             setSnake([{ x: centerX, y: centerY }]);
@@ -49,7 +49,7 @@ export function Canvas() {
         const handleKeydown = (key: KeyboardEvent) => keypress(key);
         document.addEventListener("keydown", handleKeydown);
 
-        const intervalId = setInterval(draw, 500);
+        const intervalId = setInterval(draw, 300);
         return () => {
             clearInterval(intervalId);
             document.removeEventListener("keydown", handleKeydown);

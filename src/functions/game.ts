@@ -8,6 +8,15 @@ let temp = "UP";
 const width = Number(process.env.BUN_PUBLIC_CANVAS_WIDTH);
 const height = Number(process.env.BUN_PUBLIC_CANVAS_HEIGHT);
 
+export const THEME = {
+  background: "#121212",    // Deep matte gray/black
+  gridLines: "#2A2A2A",     // Subtle contrast for the grid
+  snakeHead: "#50FA7B",     // Vibrant neon green
+  snakeBody: "#38A169",     // Muted green for depth
+  food: "#FF5555",          // Bright punchy red
+  glow: 15                  // Intensity of the neon effect
+};
+
 
 export const initGame = (
     canvasCtx: CanvasRenderingContext2D,
@@ -70,14 +79,28 @@ const food_where = () => {
             break;
         }
     }
+    if (!ctx || ! globalCtx) return;
+    ctx.shadowBlur = THEME.glow;
+    ctx.shadowColor = THEME.food;
 };
 
 const draw_food = () => {
     if (!ctx || ! globalCtx) return;
     
     const { food } = globalCtx;
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x, food.y, grid_size, grid_size);
+    // ctx.fillStyle = THEME.food;
+    // ctx.fillRect(food.x, food.y, grid_size, grid_size);
+    
+    
+    ctx.fillStyle = THEME.food;
+    ctx.beginPath();
+
+    ctx.arc(food.x + grid_size / 2, food.y + grid_size / 2, grid_size / 2.5, 0, 2 * Math.PI);
+
+    ctx.fill();
+    
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "transparent";
 };
 
 const check_if_overlap = () => {
@@ -93,12 +116,35 @@ const check_if_overlap = () => {
     return false;
 };
 
+export const draw_grid = (ctx:CanvasRenderingContext2D) => {
+    ctx.strokeStyle = THEME.gridLines;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    
+    // Vertical lines
+    for (let x = 0; x <= width; x += grid_size)
+    {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+    }
+      // Horizontal lines
+    for (let y = 0; y <= height; y += grid_size)
+    {
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+    }
+    ctx.stroke();
+}
+
 export const draw = () => {
     if (!ctx || !globalCtx) return;
     check_valid_direction();
     
     const { snake, dir, setSnake, setDir, food } = globalCtx;
     if (!snake || snake.length === 0) return;
+    
+    // draw the grid
+    draw_grid(ctx);
 
     // redraw the food
     draw_food();
@@ -129,12 +175,16 @@ export const draw = () => {
     } else {
         // remove tail
         const tail = snake[snake.length - 1];
-        ctx.clearRect(tail!.x, tail!.y, grid_size, grid_size);
+        ctx.fillStyle = THEME.background;
+        ctx.fillRect(tail!.x, tail!.y, grid_size, grid_size);
         snake.pop();
     }
 
-    ctx.fillStyle = "darkgreen";
+    ctx.fillStyle = THEME.snakeHead;
     ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
+    
+    ctx.fillStyle = THEME.snakeBody;
+    if(snake.length>1 ) ctx.fillRect(snake[1]!.x, snake[1]!.y, grid_size, grid_size);
 
     if (check_if_overlap())
     {
@@ -142,8 +192,10 @@ export const draw = () => {
         const centerY = Math.floor(height / 2 / grid_size) * grid_size;
         alert("Overlap");
         setSnake([{ x: centerX, y: centerY }]);
-        ctx.clearRect(0, 0, height, width);
+        ctx.fillStyle = THEME.background;
+        ctx.fillRect(0, 0, height, width);
         food_where();
-        setDir("UP");
+        draw_food();
+        updateDir("UP");
     }
 };
