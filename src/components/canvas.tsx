@@ -41,8 +41,9 @@ export function Canvas() {
             ctx.fillStyle = THEME.snakeHead;
             ctx.fillRect(centerX, centerY, grid_size, grid_size);
 
-            setSnake([{ x: centerX, y: centerY }]);
-            initGame(ctx, globalContext);
+            const initialSnake = [{ x: centerX, y: centerY }];
+            setSnake(initialSnake);
+            initGame(ctx, { ...globalContext, snake: initialSnake });
             initialized.current = true;
         }
 

@@ -8,6 +8,51 @@ let temp = "UP";
 const width = Number(process.env.BUN_PUBLIC_CANVAS_WIDTH);
 const height = Number(process.env.BUN_PUBLIC_CANVAS_HEIGHT);
 
+const free_cells:SnakeSegment[] = [];
+
+const mp = new Map<number, number>();
+
+const cellKey = ({ x, y }: SnakeSegment) => x * width + y;
+
+const rebuildFreeCells = (snake: SnakeSegment[]) => {
+    free_cells.length = 0;
+    mp.clear();
+
+    const occupied = new Set(snake.map(cellKey));
+
+    for (let i = 0; i < width; i += grid_size) {
+        for (let j = 0; j < height; j += grid_size) {
+            const cell = { x: i, y: j };
+            if (!occupied.has(cellKey(cell))) {
+                mp.set(cellKey(cell), free_cells.length);
+                free_cells.push(cell);
+            }
+        }
+    }
+};
+
+const addFreeCell = (cell: SnakeSegment) => {
+    const key = cellKey(cell);
+    if (mp.has(key)) return;
+
+    mp.set(key, free_cells.length);
+    free_cells.push({ x: cell.x, y: cell.y });
+};
+
+const removeFreeCell = (cell: SnakeSegment) => {
+    const key = cellKey(cell);
+    const idx = mp.get(key);
+    if (idx === undefined) return;
+
+    const last = free_cells[free_cells.length - 1];
+    if (!last) return;
+
+    free_cells[idx] = last;
+    mp.set(cellKey(last), idx);
+    free_cells.pop();
+    mp.delete(key);
+};
+
 export const THEME = {
   background: "#121212",    // Deep matte gray/black
   gridLines: "#2A2A2A",     // Subtle contrast for the grid
@@ -25,6 +70,9 @@ export const initGame = (
     ctx = canvasCtx;
     globalCtx = context;
     temp = context.dir as string;
+    const {snake} = globalCtx;
+
+    rebuildFreeCells(snake);
     ctx.fillStyle = "darkgreen";
     food_where();
     draw_food();
@@ -66,23 +114,19 @@ export const keypress = (key: KeyboardEvent) => {
 const food_where = () => {
     if (!globalCtx) return;
     
-    const { snake, food } = globalCtx;
+    const { food, setFood } = globalCtx;
+    if (free_cells.length === 0) return;
     
-    food.x = Math.floor(Math.random() * width/grid_size) * grid_size;
-    food.y = Math.floor(Math.random() * height/grid_size) * grid_size;
-
-    // check for food spawn on the snake
-    for (let { x, y } of snake)
-    {
-        if (x === food.x && y === food.y)
-        {
-            food_where();
-            break;
-        }
-    }
+    const new_location = free_cells[Math.floor(Math.random() * free_cells.length)] as SnakeSegment;
+    const nextFood = { x: new_location.x, y: new_location.y };
+    
+    food.x = nextFood.x;
+    food.y = nextFood.y;
+    setFood(nextFood);
     if (!ctx || ! globalCtx) return;
     ctx.shadowBlur = THEME.glow;
     ctx.shadowColor = THEME.food;
+
 };
 
 const draw_food = () => {
@@ -141,7 +185,7 @@ export const draw = () => {
     if (!ctx || !globalCtx) return;
     check_valid_direction();
     
-    const { snake, dir, setSnake, setDir, food } = globalCtx;
+    const { snake, dir, setSnake, food } = globalCtx;
     if (!snake || snake.length === 0) return;
     
     // draw the grid
@@ -170,19 +214,26 @@ export const draw = () => {
     if (snake[0]!.y >= height) snake[0]!.y = 0;
     else if (snake[0]!.y < 0) snake[0]!.y = height - grid_size;
 
-    if (food.x === snake[0]!.x && food.y === snake[0]!.y) {
-        food_where();
-        draw_food();
-    } else {
+    const ateFood = food.x === snake[0]!.x && food.y === snake[0]!.y;
+
+    if (!ateFood) {
         // remove tail
         const tail = snake[snake.length - 1];
         ctx.fillStyle = THEME.background;
         ctx.fillRect(tail!.x, tail!.y, grid_size, grid_size);
+        addFreeCell(tail!);
         snake.pop();
     }
 
     ctx.fillStyle = THEME.snakeHead;
     ctx.fillRect(snake[0]!.x, snake[0]!.y, grid_size, grid_size);
+
+    removeFreeCell(snake[0]!);
+
+    if (ateFood) {
+        food_where();
+        draw_food();
+    }
     
     ctx.fillStyle = THEME.snakeBody;
     if(snake.length>1 ) ctx.fillRect(snake[1]!.x, snake[1]!.y, grid_size, grid_size);
@@ -192,9 +243,13 @@ export const draw = () => {
         const centerX = Math.floor(width / 2 / grid_size) * grid_size;
         const centerY = Math.floor(height / 2 / grid_size) * grid_size;
         alert("Overlap");
-        setSnake([{ x: centerX, y: centerY }]);
+        const resetSnake = [{ x: centerX, y: centerY }];
+        setSnake(resetSnake);
         ctx.fillStyle = THEME.background;
-        ctx.fillRect(0, 0, height, width);
+        ctx.fillRect(0, 0, width, height);
+        snake.length=0;
+        snake.push(resetSnake[0] as SnakeSegment);
+        rebuildFreeCells(resetSnake);
         food_where();
         draw_food();
         updateDir("UP");
