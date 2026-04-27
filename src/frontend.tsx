@@ -7,14 +7,18 @@
 
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
+import { loadConfig } from "./config";
 
-function start() {
+async function start() {
+  await loadConfig();
   const root = createRoot(document.getElementById("root")!);
   root.render(<App />);
 }
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", start);
+  document.addEventListener("DOMContentLoaded", () => {
+    void start();
+  });
 } else {
-  start();
+  void start();
 }

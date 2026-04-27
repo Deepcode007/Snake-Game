@@ -1,24 +1,24 @@
 import { grid_size, type GlobalContextType, type SnakeSegment } from "@/App";
+import { getCanvasHeight, getCanvasWidth } from "@/config";
 import { flushSync } from "react-dom";
 
 let ctx: CanvasRenderingContext2D | null = null;
 let globalCtx: GlobalContextType | null = null;
 let temp = "UP";
 
-const width = Number(process.env.BUN_PUBLIC_CANVAS_WIDTH);
-const height = Number(process.env.BUN_PUBLIC_CANVAS_HEIGHT);
-
 const free_cells:SnakeSegment[] = [];
 
 const mp = new Map<number, number>();
 
-const cellKey = ({ x, y }: SnakeSegment) => x * width + y;
+const cellKey = ({ x, y }: SnakeSegment) => x * getCanvasWidth() + y;
 
 const rebuildFreeCells = (snake: SnakeSegment[]) => {
     free_cells.length = 0;
     mp.clear();
 
     const occupied = new Set(snake.map(cellKey));
+    const width = getCanvasWidth();
+    const height = getCanvasHeight();
 
     for (let i = 0; i < width; i += grid_size) {
         for (let j = 0; j < height; j += grid_size) {
@@ -162,6 +162,8 @@ const check_if_overlap = () => {
 };
 
 export const draw_grid = (ctx:CanvasRenderingContext2D) => {
+    const width = getCanvasWidth();
+    const height = getCanvasHeight();
     ctx.strokeStyle = THEME.gridLines;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -183,6 +185,8 @@ export const draw_grid = (ctx:CanvasRenderingContext2D) => {
 
 export const draw = () => {
     if (!ctx || !globalCtx) return;
+    const width = getCanvasWidth();
+    const height = getCanvasHeight();
     check_valid_direction();
     
     const { snake, dir, setSnake, food } = globalCtx;

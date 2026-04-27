@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import plugin from "bun-plugin-tailwind";
 import { existsSync } from "fs";
-import { rm } from "fs/promises";
+import { copyFile, rm } from "fs/promises";
 import path from "path";
 
 if (process.argv.includes("--help") || process.argv.includes("-h")) {
@@ -147,6 +147,13 @@ const result = await Bun.build({
 });
 
 const end = performance.now();
+
+const configSource = path.resolve("src", "config.json");
+const configDestination = path.join(outdir, "config.json");
+
+if (existsSync(configSource)) {
+  await copyFile(configSource, configDestination);
+}
 
 const outputTable = result.outputs.map(output => ({
   File: path.relative(process.cwd(), output.path),

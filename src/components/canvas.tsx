@@ -1,4 +1,5 @@
 import { GlobalContext, grid_size, type GlobalContextType } from "@/App";
+import { getCanvasHeight, getCanvasWidth } from "@/config";
 import { draw, keypress, initGame, syncContext, THEME } from "@/functions/game";
 import { useContext, useEffect, useRef } from "react";
 
@@ -19,8 +20,8 @@ export function Canvas() {
         if (!ctx) return;
 
         // Define logical dimensions
-        const width = Number(process.env.BUN_PUBLIC_CANVAS_WIDTH);
-        const height = Number(process.env.BUN_PUBLIC_CANVAS_HEIGHT);
+        const width = getCanvasWidth();
+        const height = getCanvasHeight();
 
         // Handle High DPI displays (Retina screens)
         const dpr = window.devicePixelRatio || 1;
@@ -61,8 +62,8 @@ export function Canvas() {
             ref={canvasRef}
             style={{
                 backgroundColor: "white",
-                width: "600px",
-                height: "600px",
+                width: `${getCanvasWidth()}px`,
+                height: `${getCanvasHeight()}px`,
             }}
         />
     );
