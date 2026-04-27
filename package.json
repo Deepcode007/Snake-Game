@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun --hot src/index.html",
     "start": "NODE_ENV=production bun src/index.ts",
-    "build": "bun run build.ts"
+    "build": "bun run --bun build.ts"
   },
   "dependencies": {
     "bun-plugin-tailwind": "^0.1.2",
