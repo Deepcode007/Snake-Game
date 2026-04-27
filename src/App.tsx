@@ -3,14 +3,16 @@ import { Navbar } from "./components/navbar";
 import "./index.css";
 import { Canvas } from "./components/canvas";
 
-
 export interface SnakeSegment {
-    x: number,
-    y: number
+    x: number;
+    y: number;
 }
 
-enum Directions{
-    "UP", "DOWN", "LEFT", "RIGHT"
+enum Directions {
+    "UP",
+    "DOWN",
+    "LEFT",
+    "RIGHT",
 }
 
 export interface GlobalContextType {
@@ -25,15 +27,15 @@ export interface GlobalContextType {
 export const grid_size = 25;
 export const GlobalContext = createContext<GlobalContextType | null>(null);
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
-    const [snake, setSnake] = useState([
-        { x: 0, y: 0 },
-    ]);
+    const [snake, setSnake] = useState([{ x: 0, y: 0 }]);
     const [food, setFood] = useState({ x: 1, y: 1 });
-    
+
     const [dir, setDir] = useState<String>("UP");
 
     return (
-        <GlobalContext.Provider value={{ snake, setSnake, food, setFood, dir, setDir }}>
+        <GlobalContext.Provider
+            value={{ snake, setSnake, food, setFood, dir, setDir }}
+        >
             {children}
         </GlobalContext.Provider>
     );
@@ -44,7 +46,10 @@ export function App() {
         <GlobalProvider>
             <div className="bg-gray-400 h-screen flex flex-col">
                 <Navbar></Navbar>
-                <div className="flex justify-center items-center h-full w-full bg-amber-600" id="game-container">
+                <div
+                    className="flex justify-center items-center h-full w-full bg-amber-600"
+                    id="game-container"
+                >
                     <Canvas />
                 </div>
             </div>

@@ -66,10 +66,11 @@ export const keypress = (key: KeyboardEvent) => {
 const food_where = () => {
     if (!globalCtx) return;
     
-    const { snake, food, setFood } = globalCtx;
+    const { snake, food } = globalCtx;
     
-    food.x = Math.floor(Math.random() * 20) * grid_size;
-    food.y = Math.floor(Math.random() * 20) * grid_size;
+    food.x = Math.floor(Math.random() * width/grid_size) * grid_size;
+    food.y = Math.floor(Math.random() * height/grid_size) * grid_size;
+
     // check for food spawn on the snake
     for (let { x, y } of snake)
     {
